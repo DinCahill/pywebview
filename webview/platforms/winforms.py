@@ -75,7 +75,9 @@ def _is_chromium():
         if version < 394802: # .NET 4.6.2
             return False
 
-        version_string = CoreWebView2Environment.GetAvailableCoreWebView2BrowserVersionString()
+        logger.debug(dir(CoreWebView2Environment))
+        logger.debug(dir(CoreWebView2Environment())
+        version_string = CoreWebView2Environment().GetAvailableCoreWebView2BrowserVersionString()
         logger.debug("Webview2 version: " + version_string)
         #if build >= 860622: # Webview2 86.0.622.0
         if version_string != "":
