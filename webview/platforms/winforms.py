@@ -76,8 +76,8 @@ def _is_chromium():
             return False
 
         logger.debug('Test')
-        logger.debug(str(dir(CoreWebView2Environment)))
-        logger.debug((dir(CoreWebView2Environment()))
+        #logger.debug(str(dir(CoreWebView2Environment)))
+        #logger.debug((dir(CoreWebView2Environment()))
         #version_string = CoreWebView2Environment().GetAvailableCoreWebView2BrowserVersionString()
         #logger.debug("Webview2 version: " + version_string)
         #if build >= 860622: # Webview2 86.0.622.0
