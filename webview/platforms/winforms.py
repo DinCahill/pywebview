@@ -38,6 +38,7 @@ import System.Windows.Forms as WinForms
 from System import IntPtr, Int32, Func, Type, Environment, Uri
 from System.Threading import Thread, ThreadStart, ApartmentState
 from System.Drawing import Size, Point, Icon, Color, ColorTranslator, SizeF
+from Microsoft.Web.WebView2.Core import CoreWebView2Environment
 
 kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
 
@@ -63,39 +64,6 @@ def _is_edge():
 
 
 def _is_chromium():
-    def edge_build(key_type, key, description=''):
-        try:
-            windows_key = None
-            if machine() == 'x86' or key_type == 'HKEY_CURRENT_USER':
-                path = rf'Microsoft\EdgeUpdate\Clients\{key}'
-            else:
-                path = rf'WOW6432Node\Microsoft\EdgeUpdate\Clients\{key}'
-
-            register_key = rf'Computer\{key_type}\{path}'
-            windows_key = winreg.OpenKey(getattr(winreg, key_type), rf'SOFTWARE\{path}')
-            build, _ = winreg.QueryValueEx(windows_key, 'pv')
-            build = int(build.replace('.', '')[:6])
-
-            return build
-        except Exception as e:
-            # Forming extra information
-            extra_info = ''
-            if description != '':
-                extra_info = f'{description} Registry path: {register_key}'
-            else:
-                extra_info = f'Registry path: {register_key}'
-
-            # Adding extra info to error
-            e.strerror += ' - ' + extra_info
-            logger.debug(e)
-
-        try:
-            winreg.CloseKey(windows_key)
-        except:
-            pass
-
-        return 0
-
     try:
         net_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r'SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full')
         version, _ = winreg.QueryValueEx(net_key, 'Release')
@@ -103,19 +71,11 @@ def _is_chromium():
         if version < 394802: # .NET 4.6.2
             return False
 
-        build_versions = [
-            {'key':'{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}', 'description':'Microsoft Edge WebView2 Runtime'},  # runtime
-            {'key':'{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA}', 'description':'Microsoft Edge WebView2 Beta'}, # beta
-            {'key':'{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10}', 'description':'Microsoft Edge WebView2 Developer'}, # dev
-            {'key':'{65C35B14-6C1D-4122-AC46-7148CC9D6497}', 'description':'Microsoft Edge WebView2 Canary'}, # canary
-        ]
-
-        for item in build_versions:
-            for key_type in ('HKEY_CURRENT_USER', 'HKEY_LOCAL_MACHINE'):
-                build = edge_build(key_type, item['key'], item['description'])
-
-                if build >= 860622: # Webview2 86.0.622.0
-                    return True
+        version_string = CoreWebView2Environment.GetAvailableCoreWebView2BrowserVersionString()
+        logger.debug("Webview2 version: " + version_string)
+        #if build >= 860622: # Webview2 86.0.622.0
+        if version_string != "":
+            return True
 
     except Exception as e:
         logger.exception(e)
