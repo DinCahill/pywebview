@@ -30,9 +30,6 @@ except ImportError:
 
 import clr
 
-archpath = 'x64' if architecture()[0] == '64bit' else 'x86'
-os.environ['Path'] = interop_dll_path(archpath) + ';' + os.environ['Path']
-clr.AddReference(interop_dll_path('Microsoft.Web.WebView2.Core.dll'))
 clr.AddReference('System.Windows.Forms')
 clr.AddReference('System.Collections')
 clr.AddReference('System.Threading')
@@ -41,6 +38,10 @@ import System.Windows.Forms as WinForms
 from System import IntPtr, Int32, Func, Type, Environment, Uri
 from System.Threading import Thread, ThreadStart, ApartmentState
 from System.Drawing import Size, Point, Icon, Color, ColorTranslator, SizeF
+
+archpath = 'x64' if architecture()[0] == '64bit' else 'x86'
+os.environ['Path'] = interop_dll_path(archpath) + ';' + os.environ['Path']
+clr.AddReference(interop_dll_path('Microsoft.Web.WebView2.Core.dll'))
 from Microsoft.Web.WebView2.Core import CoreWebView2Environment
 
 kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
