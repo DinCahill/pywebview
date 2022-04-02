@@ -13,7 +13,7 @@ from threading import Event
 import ctypes
 from ctypes import windll
 from uuid import uuid4
-from platform import machine
+from platform import architecture, machine
 import time
 
 from webview import windows, OPEN_DIALOG, FOLDER_DIALOG, SAVE_DIALOG
