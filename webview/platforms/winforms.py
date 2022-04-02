@@ -18,7 +18,7 @@ import time
 
 from webview import windows, OPEN_DIALOG, FOLDER_DIALOG, SAVE_DIALOG
 from webview.guilib import forced_gui_
-from webview.util import parse_file_type, inject_base_uri
+from webview.util import parse_file_type, inject_base_uri, interop_dll_path
 from webview.js import alert
 from webview.screen import Screen
 from webview.window import FixPoint
