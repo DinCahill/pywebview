@@ -30,6 +30,9 @@ except ImportError:
 
 import clr
 
+archpath = 'x64' if architecture()[0] == '64bit' else 'x86'
+os.environ['Path'] = interop_dll_path(archpath) + ';' + os.environ['Path']
+clr.AddReference(interop_dll_path('Microsoft.Web.WebView2.Core.dll'))
 clr.AddReference('System.Windows.Forms')
 clr.AddReference('System.Collections')
 clr.AddReference('System.Threading')
